@@ -4,18 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./style.css">
-  <title>🏠</title>
+  <title>Automation🏠</title>
   <script>
     let estado = "0";
-
-    
     async function toggleRele1(event) {
       event.preventDefault();
       estado = estado === "0" ? "1" : "0";
       await updateRele1();
     }
+    
     async function updateRele1() {
-
+  
       // Consultando API e validando o status da lampada
       let api_status = await fetch('http://189.107.99.186:9000/home/VerificandoEquipamentos/', {
         method: 'GET',
@@ -26,74 +25,53 @@
       .then((data) => {
         return data[0]["StatusLampada"];
       });
-
-      // if(api_status){ // Se a lampada checar ligada
-      //   const json_context = { 'StatusLampada': 'false' }
-
-      //   api_status = await fetch('http://189.107.99.186:9000/home/AtualizarEquipamentos/1', {
-      //     method: 'PATCH',
-      //     headers: { 
-      //       'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify(json_context),
-      //   });
-      // };
-
+      
       let rele1             = document.getElementById("rele");
       let botao             = document.getElementById("botao").getElementsByTagName("a")[0];
-      let context_ligado    = { 'StatusLampada': 'true' };
-      let context_desligado = { 'StatusLampada': 'false' };
-
-      rele1.className = estado === false ? "rele1_desligado" : "rele1_ligado";
-      botao.className = "botao";
+      let action           = api_status ? { 'StatusLampada': 'false' } : { 'StatusLampada': 'true' }
+      rele1.className      = estado === "0" ? "rele1_desligado" : "rele1_ligado";
+      botao.className      = "botao";
+      botao.href           = estado === "0" 
       
-      // botao.href = estado === true 
-      // ? await fetch('http://localhost:3001/ligar', {
-      //   method: 'GET',
-      // }) 
-      // : await fetch('http://localhost:3001/desligar', {
-      //   method: 'GET',
-      // })
-      
-      botao.href = api_status === true 
+      botao.href = api_status && estado === "0" 
       ? await fetch('http://189.107.99.186:9000/home/AtualizarEquipamentos/1', {
           method: 'PATCH',
           headers: { 
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(context_desligado),
+          body: JSON.stringify(action),
         })
       : await fetch('http://189.107.99.186:9000/home/AtualizarEquipamentos/1', {
           method: 'PATCH',
           headers: { 
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(context_ligado),
+          body: JSON.stringify(action),
         })
-
-      botao.innerHTML = estado === "0" ? "Liga" : "Desliga";
+      
+      botao.innerHTML = api_status && estado === "0" ? "Liga" : "Desliga";
     };
 
   async function enviarDados() {
-  const litrosElement  = document.getElementById('litros');
+  const litrosElement = document.getElementById('litros');
   const cubicosElement = document.getElementById('cubicos');
-  const boiaElement    = document.getElementById('boia');
+  const boiaElement = document.getElementById('boia');
 
   try {
     const response = await fetch('http://localhost:3001/atualizar-dados', {
       method: 'POST'
     });
 
-    // if (response.ok) {
-    //   const dados = await response.json();
+    if (response.ok) {
+      const dados = await response.json();
 
-    //   // Atualize os elementos da página com os novos dados
-    //   litrosElement.textContent = `● Litros (L): ${dados.litros}`;
-    //   cubicosElement.textContent = `● Metros cúbicos (m³): ${dados.cubicos}`;
-    //   boiaElement.textContent = `● Altura ideal da boia: ${dados.boia}`;
-    // } else {
-    //   console.error('Erro ao enviar dados:', response.statusText);
-    // }
+      // Atualize os elementos da página com os novos dados
+      litrosElement.textContent = `● Litros (L): ${dados.litros}`;
+      cubicosElement.textContent = `● Metros cúbicos (m³): ${dados.cubicos}`;
+      boiaElement.textContent = `● Altura ideal da boia: ${dados.boia}`;
+    } else {
+      console.error('Erro ao enviar dados:', response.statusText);
+    }
   } catch (error) {
     console.error('Erro ao enviar dados:', error);
   }

@@ -1,0 +1,146 @@
+body {
+	margin: 0;
+	padding: 0;
+}
+
+header {
+    background: linear-gradient(to bottom, #16ADFF 5%, #121212 100%);
+    color: #ffffff;
+    padding: 20px; 
+    text-align: center; 
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+	font-family: Arial, sans-serif;
+}
+
+h1 {
+    margin: 0; 
+}
+
+#wrapper {
+	padding-top: 40px;
+	/* position: relative; */
+	width: 530px;
+	height: 600px;
+	margin: 0 auto;
+	font-size: 30px;
+	color: black;
+	text-align: center;
+	font-family: Arial, sans-serif;
+}
+
+.rele1_ligado,
+.rele1_desligado,
+.rele2_ligado,
+.rele2_desligado {
+	right: -110px;
+	width: 300px;
+	height: 206px;
+	border: none;
+	background-repeat: no-repeat;
+	margin-top: 8rem;
+}
+
+.rele1_ligado {
+	top: 200px;
+	background-image: url('https://uploaddeimagens.com.br/images/004/618/316/thumb/ligada.jpeg?1695668427');
+}
+
+.rele1_desligado {
+	top: 200px;
+	background-image: url('https://uploaddeimagens.com.br/images/004/618/315/thumb/desligada.jpeg?1695668391');
+}
+
+
+.interface-box {
+	position: absolute;
+	right: 85px;
+	border-radius: 25px;
+	border: 2px solid #000000;
+	width: 350px;
+	height: 150px;
+}
+
+#div1 {
+	top: 195px;
+}
+
+#div2 {
+	top: 355px;
+}
+
+#dados-arduino {
+    position: relative;
+    text-align: top; 
+    padding: 200px; 
+    border: none; 
+    border-radius: 10px; 
+    width: fit-content; 
+    margin: 0 auto; 
+    background-color: #ffffff; 
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); 
+}
+
+#dados-arduino::before {
+    content: ""; 
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUQMq0spDb9PYeerayG8SUlcotlMh5gYjdzQ&usqp=CAU');
+    background-size: cover;
+    width: 50px; 
+    height: 50px; 
+    position: absolute; 
+    top: 10px; 
+    right: 10px; 
+}
+
+#dados-arduino h2 {
+    position: absolute; 
+    top: 10px; 
+    right: 50%; 
+    transform: translateX(50%); 
+    margin: 0; 
+    font-size: 40px;
+	font-family: Arial, sans-serif;
+}
+
+.botao-box {
+	position: absolute;
+	right: 230px;
+	width: 200px;
+	height: 256px;
+}
+
+.botao,
+.botao_2 {
+	box-shadow: inset 0px 1px 0px 0px #ffffff;
+	background: linear-gradient(to bottom, #16ADFF 5%, #121212 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#16ADFF', endColorstr='#26A8FF');
+	background-color: #ededed;
+	border-radius: 6px;
+	border: 1px solid #dcdcdc;
+	display: inline-block;
+	color: #ffffff;
+	font-family: Arial, sans-serif;
+	font-size: 28px;
+	font-weight: bold;
+	padding: 10px 190px;
+	text-decoration: none;
+	text-shadow: 0px 0px 0px #ffffff;
+	width: 100px;
+	text-align: center;
+}
+
+.botao:active,
+.botao_2:active {
+	position: relative;
+	top: 1px;
+}
+
+.flex {
+	display: flex;
+	align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.flex-direction-column {
+	flex-direction: column;
+}

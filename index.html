@@ -4,19 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./style.css">
-  <title>Automation🏠</title>
+  <title>🏠</title>
   <script>
+
     let estado = "0";
+
     async function toggleRele1(event) {
       event.preventDefault();
       estado = estado === "0" ? "1" : "0";
       await updateRele1();
-    }
-    
+    };
+
     async function updateRele1() {
-  
+
       // Consultando API e validando o status da lampada
-      let api_status = await fetch('http://189.107.99.186:9000/home/VerificandoEquipamentos/', {
+      let api_status = await fetch('http://189.107.98.120:9000/home/VerificandoEquipamentos/', {
         method: 'GET',
         headers: {
           'Accept': 'application/json',},
@@ -25,31 +27,41 @@
       .then((data) => {
         return data[0]["StatusLampada"];
       });
+
+      console.log('[ API STATUS ]',api_status);
+
+      // Alterando o status visual na aplicação
+      let rele1       = document.getElementById("rele");
+      let botao       = document.getElementById("botao").getElementsByTagName("a")[0];
+      rele1.className = estado === "0" ? "rele1_desligado" : "rele1_ligado";
+      botao.className = "botao";
+      botao.innerHTML = estado === "0" ? "Ligar" : "Desligar";
       
-      let rele1             = document.getElementById("rele");
-      let botao             = document.getElementById("botao").getElementsByTagName("a")[0];
-      let action           = api_status ? { 'StatusLampada': 'false' } : { 'StatusLampada': 'true' }
-      rele1.className      = estado === "0" ? "rele1_desligado" : "rele1_ligado";
-      botao.className      = "botao";
-      botao.href           = estado === "0" 
-      
-      botao.href = api_status && estado === "0" 
-      ? await fetch('http://189.107.99.186:9000/home/AtualizarEquipamentos/1', {
+      // Teste
+      // botao.href = estado === "0"
+      // ? await fetch('http://localhost:3001/ligar', {
+      //   method: 'GET',
+      // }) 
+      // : await fetch('http://localhost:3001/desligar', {
+      //   method: 'GET',
+      // })
+
+       // Ação de enviar o JSON na API
+      botao.href = estado === "0" && api_status
+      ? await fetch('http://189.107.98.120:9000/home/AtualizarEquipamentos/1', {
           method: 'PATCH',
           headers: { 
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(action),
+          body: JSON.stringify({ 'StatusLampada': 'true' }),
         })
-      : await fetch('http://189.107.99.186:9000/home/AtualizarEquipamentos/1', {
+      : await fetch('http://189.107.98.120:9000/home/AtualizarEquipamentos/1', {
           method: 'PATCH',
           headers: { 
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(action),
+          body: JSON.stringify({ 'StatusLampada': 'false' }),
         })
-      
-      botao.innerHTML = api_status && estado === "0" ? "Liga" : "Desliga";
     };
 
   async function enviarDados() {
@@ -88,7 +100,7 @@
       <div id="div1" class="flex flex-direction-column">
         <div id="botao">
           <a href="/?ligar" class="botao" onclick="toggleRele1(event)">
-            Liga
+            Ligar
           </a>
         </div>
         <div id="rele" class="rele1_desligado"></div>

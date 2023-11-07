@@ -3,118 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="./style.css">
+  <!-- <link rel="stylesheet" href="./style.css"> -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <title>🏠</title>
-  <script>
+  <script src="script.js"></script>
 
-    let estado = "0";
-
-    async function toggleRele1(event) {
-      event.preventDefault();
-      estado = estado === "0" ? "1" : "0";
-      await updateRele1();
-    };
-
-    async function updateRele1() {
-
-      // Consultando API e validando o status da lampada
-      let api_status = await fetch('http://189.107.98.120:9000/home/VerificandoEquipamentos/', {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',},
-        }
-      ).then(response => response.json())
-      .then((data) => {
-        return data[0]["StatusLampada"];
-      });
-
-      console.log('[ API STATUS ]',api_status);
-
-      // Alterando o status visual na aplicação
-      let rele1       = document.getElementById("rele");
-      let botao       = document.getElementById("botao").getElementsByTagName("a")[0];
-      rele1.className = estado === "0" ? "rele1_desligado" : "rele1_ligado";
-      botao.className = "botao";
-      botao.innerHTML = estado === "0" ? "Ligar" : "Desligar";
-      
-      // Teste
-      // botao.href = estado === "0"
-      // ? await fetch('http://localhost:3001/ligar', {
-      //   method: 'GET',
-      // }) 
-      // : await fetch('http://localhost:3001/desligar', {
-      //   method: 'GET',
-      // })
-
-       // Ação de enviar o JSON na API
-      botao.href = estado === "0" && api_status
-      ? await fetch('http://189.107.98.120:9000/home/AtualizarEquipamentos/1', {
-          method: 'PATCH',
-          headers: { 
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 'StatusLampada': 'true' }),
-        })
-      : await fetch('http://189.107.98.120:9000/home/AtualizarEquipamentos/1', {
-          method: 'PATCH',
-          headers: { 
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 'StatusLampada': 'false' }),
-        })
-    };
-
-  async function enviarDados() {
-  const litrosElement = document.getElementById('litros');
-  const cubicosElement = document.getElementById('cubicos');
-  const boiaElement = document.getElementById('boia');
-
-  try {
-    const response = await fetch('http://localhost:3001/atualizar-dados', {
-      method: 'POST'
-    });
-
-    if (response.ok) {
-      const dados = await response.json();
-
-      // Atualize os elementos da página com os novos dados
-      litrosElement.textContent = `● Litros (L): ${dados.litros}`;
-      cubicosElement.textContent = `● Metros cúbicos (m³): ${dados.cubicos}`;
-      boiaElement.textContent = `● Altura ideal da boia: ${dados.boia}`;
-    } else {
-      console.error('Erro ao enviar dados:', response.statusText);
-    }
-  } catch (error) {
-    console.error('Erro ao enviar dados:', error);
-  }
-}
-
-  </script>
 </head>
 <body>
-  <header>
+  <header class="bg-dark text-white text-center py-3">
     <h1>Home</h1>
   </header>
-  <div class="flex">
-    <div id="wrapper">
-      <div id="div1" class="flex flex-direction-column">
-        <div id="botao">
-          <a href="/?ligar" class="botao" onclick="toggleRele1(event)">
-            Ligar
-          </a>
+  <div class="container my-4">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-header">Luz</div>
+          <div class="card-body text-center">
+            <button type="button" class="btn btn-primary" id="buttonLuz" onclick="atualizarStatusLampada(event)"></button>
+          </div>
         </div>
-        <div id="rele" class="rele1_desligado"></div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-header">Sensores</div>
+          <div class="card-body text-center">
+            <button type="button" class="btn btn-primary" id="buttonPIR" onclick="onOffSensor(event)">Ligar</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div id="dados-arduino" class="dados-arduino">
-      <h2>Caixa d'agua</h2>
-      <p id="litros">● Litros (L):</p>
-      <p id="cubicos">● Metros cúbicos (m³):</p>
-      <p id="boia">● Altura ideal da boia:</p>
-      <button class="carregar" onclick="enviarDados()">Carregar Dados</button>
+    <div class="card mb-4">
+      <div class="card-header">Caixa d'agua</div>
+      <div class="card-body">
+        <h2>Dados</h2>
+       
+        <p id="boia">● Altura da Agua:<p id="alturaAgua"></p></p>
+        <button class="btn btn-primary" onclick="capturarDados(event)">Carregar Dados</button>
+      </div>
     </div>
-
   </div>
 </body>
+
 </html>
